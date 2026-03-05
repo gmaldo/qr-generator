@@ -580,7 +580,6 @@ function App() {
 
       {/* Header */}
       <header className="header anim-fade-up">
-        <div className="badge">✦ QR Generator</div>
         <div className="logo-icon">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
@@ -588,6 +587,7 @@ function App() {
             />
           </svg>
         </div>
+        <div className="badge">✦ QR Generator</div>
         <h1 className="app-title">Generador de QR</h1>
         <p className="app-subtitle">Creá códigos QR en segundos, sin límites</p>
       </header>
