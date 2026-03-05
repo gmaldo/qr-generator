@@ -226,8 +226,24 @@ function App() {
 
   const qrValue = getQRValue()
 
-  const downloadQR = () => {
+  const downloadQR = async () => {
     if (!qrInstanceRef.current || !qrValue) return
+    const fileName = `qr-${activeTab}-${Date.now()}.png`
+
+    // iOS Safari: use Web Share API so the user can "Save Image" to Photos
+    if (navigator.canShare) {
+      try {
+        const blob = await qrInstanceRef.current.getRawData('png')
+        const file = new File([blob], fileName, { type: 'image/png' })
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Código QR' })
+          return
+        }
+      } catch {
+        // user cancelled or share failed — fall through to download
+      }
+    }
+
     qrInstanceRef.current.download({ name: `qr-${activeTab}-${Date.now()}`, extension: 'png' })
   }
 
