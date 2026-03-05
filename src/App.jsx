@@ -1,18 +1,19 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import QRCodeStyling from 'qr-code-styling'
 import MapPicker from './MapPicker'
+import { detectLang, makeT, SUPPORTED_LANGS } from './i18n'
 import './index.css'
 
 const TABS = [
-  { id: 'wifi', label: 'WiFi', icon: '📶' },
-  { id: 'website', label: 'Web', icon: '🌐' },
-  { id: 'text', label: 'Texto', icon: '📝' },
-  { id: 'whatsapp', label: 'WhatsApp', icon: '💬' },
-  { id: 'email', label: 'Email', icon: '📧' },
-  { id: 'phone', label: 'Teléfono', icon: '📞' },
-  { id: 'sms', label: 'SMS', icon: '✉️' },
-  { id: 'vcard', label: 'Contacto', icon: '👤' },
-  { id: 'location', label: 'Ubicación', icon: '📍' },
+  { id: 'wifi', icon: '📶' },
+  { id: 'website', icon: '🌐' },
+  { id: 'text', icon: '📝' },
+  { id: 'whatsapp', icon: '💬' },
+  { id: 'email', icon: '📧' },
+  { id: 'phone', icon: '📞' },
+  { id: 'sms', icon: '✉️' },
+  { id: 'vcard', icon: '👤' },
+  { id: 'location', icon: '📍' },
 ]
 
 const WIFI_SECURITY = ['WPA', 'WEP', 'nopass']
@@ -66,6 +67,13 @@ const PRESETS = [
 const QR_SIZE = 220
 
 function App() {
+  const [lang, setLang] = useState(detectLang)
+  const t = useMemo(() => makeT(lang), [lang])
+
+  useEffect(() => {
+    localStorage.setItem('qr-lang', lang)
+  }, [lang])
+
   const [activeTab, setActiveTab] = useState('wifi')
   const [wifiData, setWifiData] = useState({ ssid: '', password: '', security: 'WPA' })
   const [websiteData, setWebsiteData] = useState({ url: '' })
@@ -313,24 +321,24 @@ function App() {
         return (
           <div className="form-section">
             <div className="field-group">
-              <label className="field-label">Nombre WiFi (SSID)</label>
+              <label className="field-label">{t('wifi.ssid')}</label>
               <input type="text" value={wifiData.ssid}
                 onChange={e => setWifiData({ ...wifiData, ssid: e.target.value })}
-                placeholder="MiRedWiFi" className={ic} />
+                placeholder={t('wifi.ssid_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Contraseña</label>
+              <label className="field-label">{t('wifi.password')}</label>
               <input type="text" value={wifiData.password}
                 onChange={e => setWifiData({ ...wifiData, password: e.target.value })}
-                placeholder="••••••••" className={ic} />
+                placeholder={t('wifi.password_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Seguridad</label>
+              <label className="field-label">{t('wifi.security')}</label>
               <div className="security-group">
                 {WIFI_SECURITY.map(sec => (
                   <button key={sec} onClick={() => setWifiData({ ...wifiData, security: sec })}
                     className={`sec-btn${wifiData.security === sec ? ' sec-active' : ''}`}>
-                    {sec === 'nopass' ? 'Abierto' : sec}
+                    {sec === 'nopass' ? t('wifi.open') : sec}
                   </button>
                 ))}
               </div>
@@ -342,10 +350,10 @@ function App() {
         return (
           <div className="form-section">
             <div className="field-group">
-              <label className="field-label">URL del sitio</label>
+              <label className="field-label">{t('website.url')}</label>
               <input type="text" value={websiteData.url}
                 onChange={e => setWebsiteData({ url: e.target.value })}
-                placeholder="www.ejemplo.com" className={ic} />
+                placeholder={t('website.url_ph')} className={ic} />
             </div>
           </div>
         )
@@ -354,10 +362,10 @@ function App() {
         return (
           <div className="form-section">
             <div className="field-group">
-              <label className="field-label">Texto o mensaje</label>
+              <label className="field-label">{t('text.label')}</label>
               <textarea value={textData.text}
                 onChange={e => setTextData({ text: e.target.value })}
-                placeholder="Escribe tu mensaje aquí..." rows={7} className={tc} />
+                placeholder={t('text.ph')} rows={7} className={tc} />
             </div>
           </div>
         )
@@ -366,16 +374,16 @@ function App() {
         return (
           <div className="form-section">
             <div className="field-group">
-              <label className="field-label">Número de teléfono</label>
+              <label className="field-label">{t('whatsapp.phone')}</label>
               <input type="text" value={whatsappData.phone}
                 onChange={e => setWhatsappData({ ...whatsappData, phone: e.target.value })}
-                placeholder="+5491123456789" className={ic} />
+                placeholder={t('whatsapp.phone_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Mensaje predefinido</label>
+              <label className="field-label">{t('whatsapp.message')}</label>
               <textarea value={whatsappData.message}
                 onChange={e => setWhatsappData({ ...whatsappData, message: e.target.value })}
-                placeholder="Hola, me gustaría consultar..." rows={5} className={tc} />
+                placeholder={t('whatsapp.message_ph')} rows={5} className={tc} />
             </div>
           </div>
         )
@@ -384,22 +392,22 @@ function App() {
         return (
           <div className="form-section">
             <div className="field-group">
-              <label className="field-label">Destinatario</label>
+              <label className="field-label">{t('email.to')}</label>
               <input type="email" value={emailData.to}
                 onChange={e => setEmailData({ ...emailData, to: e.target.value })}
-                placeholder="ejemplo@correo.com" className={ic} />
+                placeholder={t('email.to_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Asunto</label>
+              <label className="field-label">{t('email.subject')}</label>
               <input type="text" value={emailData.subject}
                 onChange={e => setEmailData({ ...emailData, subject: e.target.value })}
-                placeholder="Consulta sobre..." className={ic} />
+                placeholder={t('email.subject_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Cuerpo</label>
+              <label className="field-label">{t('email.body')}</label>
               <textarea value={emailData.body}
                 onChange={e => setEmailData({ ...emailData, body: e.target.value })}
-                placeholder="Hola, quería consultarles..." rows={4} className={tc} />
+                placeholder={t('email.body_ph')} rows={4} className={tc} />
             </div>
           </div>
         )
@@ -408,12 +416,12 @@ function App() {
         return (
           <div className="form-section">
             <div className="field-group">
-              <label className="field-label">Número de teléfono</label>
+              <label className="field-label">{t('phone.number')}</label>
               <input type="tel" value={phoneData.number}
                 onChange={e => setPhoneData({ number: e.target.value })}
-                placeholder="+5491123456789" className={ic} />
+                placeholder={t('phone.ph')} className={ic} />
             </div>
-            <p className="field-hint">Al escanear el QR se iniciará una llamada directa.</p>
+            <p className="field-hint">{t('phone.hint')}</p>
           </div>
         )
 
@@ -421,16 +429,16 @@ function App() {
         return (
           <div className="form-section">
             <div className="field-group">
-              <label className="field-label">Número de teléfono</label>
+              <label className="field-label">{t('sms.phone')}</label>
               <input type="tel" value={smsData.phone}
                 onChange={e => setSmsData({ ...smsData, phone: e.target.value })}
-                placeholder="+5491123456789" className={ic} />
+                placeholder={t('sms.phone_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Mensaje predefinido</label>
+              <label className="field-label">{t('sms.message')}</label>
               <textarea value={smsData.message}
                 onChange={e => setSmsData({ ...smsData, message: e.target.value })}
-                placeholder="Hola! Te escribo porque..." rows={5} className={tc} />
+                placeholder={t('sms.message_ph')} rows={5} className={tc} />
             </div>
           </div>
         )
@@ -439,34 +447,34 @@ function App() {
         return (
           <div className="form-section">
             <div className="field-group">
-              <label className="field-label">Nombre completo *</label>
+              <label className="field-label">{t('vcard.name')}</label>
               <input type="text" value={vcardData.name}
                 onChange={e => setVcardData({ ...vcardData, name: e.target.value })}
-                placeholder="Juan García" className={ic} />
+                placeholder={t('vcard.name_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Teléfono</label>
+              <label className="field-label">{t('vcard.phone')}</label>
               <input type="tel" value={vcardData.phone}
                 onChange={e => setVcardData({ ...vcardData, phone: e.target.value })}
-                placeholder="+5491123456789" className={ic} />
+                placeholder={t('phone.ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Email</label>
+              <label className="field-label">{t('vcard.email')}</label>
               <input type="email" value={vcardData.email}
                 onChange={e => setVcardData({ ...vcardData, email: e.target.value })}
-                placeholder="juan@empresa.com" className={ic} />
+                placeholder={t('email.to_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Organización</label>
+              <label className="field-label">{t('vcard.org')}</label>
               <input type="text" value={vcardData.org}
                 onChange={e => setVcardData({ ...vcardData, org: e.target.value })}
-                placeholder="Empresa S.A." className={ic} />
+                placeholder={t('vcard.org_ph')} className={ic} />
             </div>
             <div className="field-group">
-              <label className="field-label">Sitio web</label>
+              <label className="field-label">{t('vcard.url')}</label>
               <input type="text" value={vcardData.url}
                 onChange={e => setVcardData({ ...vcardData, url: e.target.value })}
-                placeholder="www.empresa.com" className={ic} />
+                placeholder={t('vcard.url_ph')} className={ic} />
             </div>
           </div>
         )
@@ -481,13 +489,13 @@ function App() {
                 className={`map-toggle-btn${!locationData.showMap ? ' map-toggle-active' : ''}`}
                 onClick={() => setLocationData(d => ({ ...d, showMap: false }))}
               >
-                ✏️ Manual
+                {t('location.manual')}
               </button>
               <button
                 className={`map-toggle-btn${locationData.showMap ? ' map-toggle-active' : ''}`}
                 onClick={() => setLocationData(d => ({ ...d, showMap: true }))}
               >
-                🗺️ Mapa
+                {t('location.map')}
               </button>
             </div>
 
@@ -501,7 +509,7 @@ function App() {
                       value={locationSearch.query}
                       onChange={e => handleLocationSearch(e.target.value)}
                       onBlur={() => setTimeout(() => setLocationSearch(s => ({ ...s, results: [] })), 150)}
-                      placeholder="Buscar dirección o lugar..."
+                      placeholder={t('location.search_ph')}
                       className={ic}
                       autoComplete="off"
                     />
@@ -520,7 +528,7 @@ function App() {
                       </div>
                     )}
                   </div>
-                  <button className="gps-btn" onClick={useMyLocation} title="Usar mi ubicación GPS">
+                  <button className="gps-btn" onClick={useMyLocation} title={t('location.gps')}>
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <circle cx="12" cy="12" r="3" strokeWidth={2} />
                       <path strokeLinecap="round" strokeWidth={2} d="M12 2v3M12 19v3M2 12h3M19 12h3" />
@@ -529,7 +537,7 @@ function App() {
                   </button>
                 </div>
                 <p className="field-hint" style={{ marginBottom: '0.5rem' }}>
-                  Hacé clic en el mapa para poner un pin. También podés arrastrarlo.
+                  {t('location.map_hint')}
                 </p>
                 <MapPicker
                   lat={locationData.lat}
@@ -547,13 +555,13 @@ function App() {
             ) : (
               <div className="field-row-2">
                 <div className="field-group">
-                  <label className="field-label">Latitud</label>
+                  <label className="field-label">{t('location.lat')}</label>
                   <input type="text" value={locationData.lat}
                     onChange={e => setLocationData({ ...locationData, lat: e.target.value })}
                     placeholder="-34.6037" className={ic} />
                 </div>
                 <div className="field-group">
-                  <label className="field-label">Longitud</label>
+                  <label className="field-label">{t('location.lng')}</label>
                   <input type="text" value={locationData.lng}
                     onChange={e => setLocationData({ ...locationData, lng: e.target.value })}
                     placeholder="-58.3816" className={ic} />
@@ -562,12 +570,12 @@ function App() {
             )}
 
             <div className="field-group">
-              <label className="field-label">Nombre del lugar (opcional)</label>
+              <label className="field-label">{t('location.place')}</label>
               <input type="text" value={locationData.label}
                 onChange={e => setLocationData({ ...locationData, label: e.target.value })}
-                placeholder="Obelisco, Buenos Aires" className={ic} />
+                placeholder={t('location.place_ph')} className={ic} />
             </div>
-            <p className="field-hint">Al escanear abrirá Google Maps con la ubicación.</p>
+            <p className="field-hint">{t('location.hint')}</p>
           </div>
         )
 
@@ -576,6 +584,12 @@ function App() {
   }
 
   return (
+    <>
+    <div className="bg-blobs" aria-hidden="true">
+      <div className="blob blob-1" />
+      <div className="blob blob-2" />
+      <div className="blob blob-3" />
+    </div>
     <div className="app-wrapper">
 
       {/* Header */}
@@ -587,9 +601,20 @@ function App() {
             />
           </svg>
         </div>
-        <div className="badge">✦ QR Generator</div>
-        <h1 className="app-title">Generador de QR</h1>
-        <p className="app-subtitle">Creá códigos QR en segundos, sin límites</p>
+        <div className="badge">{t('header.badge')}</div>
+        <h1 className="app-title">{t('header.title')}</h1>
+        <p className="app-subtitle">{t('header.subtitle')}</p>
+        <div className="lang-selector">
+          {SUPPORTED_LANGS.map(l => (
+            <button
+              key={l.code}
+              className={`lang-btn${lang === l.code ? ' active' : ''}`}
+              onClick={() => setLang(l.code)}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
       </header>
 
       {/* Main Card */}
@@ -607,7 +632,7 @@ function App() {
               onClick={() => handleTabChange(tab.id)}
             >
               <span className="tab-icon">{tab.icon}</span>
-              <span>{tab.label}</span>
+              <span>{t(`tab.${tab.id}`)}</span>
             </button>
           ))}
         </nav>
@@ -622,7 +647,7 @@ function App() {
 
           {/* Right — QR Preview */}
           <div className="qr-section">
-            <span className="qr-label">Vista previa</span>
+            <span className="qr-label">{t('qr.preview')}</span>
 
             {/* QR Container */}
             <div className={`qr-frame${qrValue ? ' has-qr' : ' empty'}`}>
@@ -634,14 +659,14 @@ function App() {
               {!qrValue && (
                 <div className="qr-placeholder-overlay">
                   <span className="qr-placeholder-icon">📱</span>
-                  <p className="qr-placeholder-text">Completá los campos</p>
+                  <p className="qr-placeholder-text">{t('qr.fill_fields')}</p>
                 </div>
               )}
             </div>
 
             {/* Preset selector */}
             <div className="preset-section">
-              <span className="preset-label">Estilo del QR</span>
+              <span className="preset-label">{t('qr.style')}</span>
               <div className="preset-grid">
                 {PRESETS.map(preset => (
                   <button
@@ -650,7 +675,7 @@ function App() {
                     onClick={() => setActivePreset(preset.id)}
                   >
                     <PresetPreview preset={preset} />
-                    <span className="preset-name">{preset.label}</span>
+                    <span className="preset-name">{t(`preset.${preset.id}`)}</span>
                   </button>
                 ))}
               </div>
@@ -663,7 +688,7 @@ function App() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2}
                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                Descargar PNG
+                {t('qr.download')}
               </button>
             )}
 
@@ -674,7 +699,7 @@ function App() {
                 onClick={() => setQrStyle(s => ({ ...s, showCustomizer: !s.showCustomizer }))}
               >
                 <span>🎨</span>
-                <span>Personalizar colores</span>
+                <span>{t('custom.title')}</span>
                 <span className={`toggle-arrow${qrStyle.showCustomizer ? ' open' : ''}`}>▾</span>
               </button>
 
@@ -682,7 +707,7 @@ function App() {
                 <div className="customizer-panel">
                   <div className="color-row">
                     <label className="color-label">
-                      <span>Color del QR</span>
+                      <span>{t('custom.qr_color')}</span>
                       <div className="color-swatch-wrap">
                         <div className="color-swatch" style={{ background: qrStyle.fg }} />
                         <input
@@ -694,7 +719,7 @@ function App() {
                       </div>
                     </label>
                     <label className="color-label">
-                      <span>Color de fondo</span>
+                      <span>{t('custom.bg_color')}</span>
                       <div className="color-swatch-wrap">
                         <div className="color-swatch" style={{ background: qrStyle.bg }} />
                         <input
@@ -710,7 +735,7 @@ function App() {
                     className="reset-colors-btn"
                     onClick={() => setQrStyle(s => ({ ...s, fg: '#000000', bg: '#ffffff' }))}
                   >
-                    Restablecer colores
+                    {t('custom.reset')}
                   </button>
                 </div>
               )}
@@ -724,10 +749,11 @@ function App() {
       <footer className="app-footer anim-fade-up anim-fade-up-d3">
         <span className="footer-text">QR Generator</span>
         <div className="footer-dot" />
-        <span className="footer-text">Powered by qr-code-styling</span>
+        <span className="footer-text">{t('footer.powered')}</span>
       </footer>
 
     </div>
+    </>
   )
 }
 
