@@ -54,17 +54,9 @@ export default function MapPicker({ lat, lng, onSelect }) {
         const parsedLng = parseFloat(lng)
 
         if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
-            // Props already have valid coords
             initMap(parsedLat, parsedLng)
         } else {
-            // No coords yet — try IP geolocation, fallback to Buenos Aires
-            fetch('https://ip-api.com/json/?fields=lat,lon,status')
-                .then(r => r.json())
-                .then(data => {
-                    if (data.status === 'success') initMap(data.lat, data.lon)
-                    else initMap(-34.6037, -58.3816)
-                })
-                .catch(() => initMap(-34.6037, -58.3816))
+            initMap(-34.6037, -58.3816)
         }
 
         return () => {

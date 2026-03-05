@@ -80,6 +80,9 @@ function App() {
   const [activePreset, setActivePreset] = useState('classic')
   const [formKey, setFormKey] = useState(0)
 
+  const [locationSearch, setLocationSearch] = useState({ query: '', results: [] })
+  const searchTimeoutRef = useRef(null)
+
   const qrContainerRef = useRef(null)
   const qrInstanceRef = useRef(null)
 
@@ -87,19 +90,18 @@ function App() {
     setActiveTab(tabId)
     setFormKey(k => k + 1)
 
-    // Auto-detect location via IP when opening the location tab for the first time
+    // Auto-detect approximate location via IP when opening the location tab for the first time
     if (tabId === 'location') {
       setLocationData(prev => {
         if (prev.lat || prev.lng) return prev  // already have coords, don't overwrite
-        // Fire fetch, update state when done
-        fetch('https://ip-api.com/json/?fields=lat,lon,city,status')
+        fetch('https://ipapi.co/json/')
           .then(r => r.json())
           .then(data => {
-            if (data.status === 'success') {
+            if (data.latitude && data.longitude) {
               setLocationData(d => ({
                 ...d,
-                lat: String(data.lat),
-                lng: String(data.lon),
+                lat: String(data.latitude),
+                lng: String(data.longitude),
                 label: d.label || data.city || '',
               }))
             }
@@ -225,6 +227,48 @@ function App() {
   }, [getQRValue, activePreset, qrStyle.fg, qrStyle.bg, buildQROptions])
 
   const qrValue = getQRValue()
+
+  const handleLocationSearch = (query) => {
+    setLocationSearch(s => ({ ...s, query }))
+    clearTimeout(searchTimeoutRef.current)
+    if (query.trim().length < 3) {
+      setLocationSearch(s => ({ ...s, results: [] }))
+      return
+    }
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`,
+          { headers: { 'Accept-Language': 'es' } }
+        )
+        const data = await res.json()
+        setLocationSearch(s => ({ ...s, results: data }))
+      } catch {
+        setLocationSearch(s => ({ ...s, results: [] }))
+      }
+    }, 400)
+  }
+
+  const selectSearchResult = (result) => {
+    setLocationData(d => ({
+      ...d,
+      lat: result.lat,
+      lng: result.lon,
+      label: d.label || result.display_name.split(',')[0],
+    }))
+    setLocationSearch({ query: result.display_name.split(',')[0], results: [] })
+  }
+
+  const useMyLocation = () => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition((pos) => {
+      setLocationData(d => ({
+        ...d,
+        lat: String(pos.coords.latitude),
+        lng: String(pos.coords.longitude),
+      }))
+    })
+  }
 
   const downloadQR = async () => {
     if (!qrInstanceRef.current || !qrValue) return
@@ -449,6 +493,41 @@ function App() {
 
             {locationData.showMap ? (
               <div className="map-section">
+                {/* Search + GPS */}
+                <div className="location-search-row">
+                  <div className="location-search-wrap">
+                    <input
+                      type="text"
+                      value={locationSearch.query}
+                      onChange={e => handleLocationSearch(e.target.value)}
+                      onBlur={() => setTimeout(() => setLocationSearch(s => ({ ...s, results: [] })), 150)}
+                      placeholder="Buscar dirección o lugar..."
+                      className={ic}
+                      autoComplete="off"
+                    />
+                    {locationSearch.results.length > 0 && (
+                      <div className="search-results-dropdown">
+                        {locationSearch.results.map((r, i) => (
+                          <button
+                            key={i}
+                            className="search-result-item"
+                            onMouseDown={() => selectSearchResult(r)}
+                          >
+                            <span className="search-result-name">{r.display_name.split(',')[0]}</span>
+                            <span className="search-result-sub">{r.display_name.split(',').slice(1, 3).join(',').trim()}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <button className="gps-btn" onClick={useMyLocation} title="Usar mi ubicación GPS">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="3" strokeWidth={2} />
+                      <path strokeLinecap="round" strokeWidth={2} d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+                      <circle cx="12" cy="12" r="7" strokeWidth={1.5} strokeDasharray="3 2" />
+                    </svg>
+                  </button>
+                </div>
                 <p className="field-hint" style={{ marginBottom: '0.5rem' }}>
                   Hacé clic en el mapa para poner un pin. También podés arrastrarlo.
                 </p>
