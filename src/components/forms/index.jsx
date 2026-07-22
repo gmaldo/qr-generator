@@ -7,6 +7,9 @@ import PhoneForm from './PhoneForm'
 import SmsForm from './SmsForm'
 import VcardForm from './VcardForm'
 import LocationForm from './LocationForm'
+import InstagramForm from './InstagramForm'
+import TwitterForm from './TwitterForm'
+import YouTubeForm from './YouTubeForm'
 
 const FORM_MAP = {
   wifi: WifiForm,
@@ -18,15 +21,14 @@ const FORM_MAP = {
   sms: SmsForm,
   vcard: VcardForm,
   location: LocationForm,
+  instagram: InstagramForm,
+  twitter: TwitterForm,
+  youtube: YouTubeForm,
 }
 
 export default function FormSwitch({ activeTab, formData, setFormData, t, ic, tc }) {
   const FormComponent = FORM_MAP[activeTab]
   if (!FormComponent) return null
 
-  return (
-    <div className="form-section">
-      <FormComponent data={formData} setData={setFormData} t={t} ic={ic} tc={tc} />
-    </div>
-  )
+  return <FormComponent data={formData} setData={setFormData} t={t} ic={ic} tc={tc} />
 }

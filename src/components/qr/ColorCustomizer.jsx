@@ -38,12 +38,20 @@ export default function ColorCustomizer({ qrStyle, setQrStyle, t }) {
               </div>
             </label>
           </div>
-          <button
-            className="reset-colors-btn"
-            onClick={() => setQrStyle(s => ({ ...s, fg: '#000000', bg: '#ffffff' }))}
-          >
-            {t('custom.reset')}
-          </button>
+          <div className="color-actions-row">
+            <button
+              className="invert-colors-btn"
+              onClick={() => setQrStyle(s => ({ ...s, fg: s.bg, bg: s.fg }))}
+            >
+              {t('custom.invert')}
+            </button>
+            <button
+              className="reset-colors-btn"
+              onClick={() => setQrStyle(s => ({ ...s, fg: '#000000', bg: '#ffffff' }))}
+            >
+              {t('custom.reset')}
+            </button>
+          </div>
         </div>
       )}
     </div>

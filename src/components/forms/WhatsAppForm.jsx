@@ -1,12 +1,17 @@
+import ValidatedField from './ValidatedField'
+import useValidation from './useValidation'
+
 export default function WhatsAppForm({ data, setData, t, ic, tc }) {
+  const { errors, validate } = useValidation()
+
   return (
     <div className="form-section">
-      <div className="field-group">
-        <label className="field-label">{t('whatsapp.phone')}</label>
+      <ValidatedField label={t('whatsapp.phone')} error={errors.phone}>
         <input type="text" value={data.phone}
           onChange={e => setData({ ...data, phone: e.target.value })}
-          placeholder={t('whatsapp.phone_ph')} className={ic} />
-      </div>
+          onBlur={e => validate('phone', e.target.value, 'phone', t('error.invalid_phone'))}
+          placeholder={t('whatsapp.phone_ph')} className={`${ic}${errors.phone ? ' field-invalid' : ''}`} />
+      </ValidatedField>
       <div className="field-group">
         <label className="field-label">{t('whatsapp.message')}</label>
         <textarea value={data.message}

@@ -1,12 +1,17 @@
+import ValidatedField from './ValidatedField'
+import useValidation from './useValidation'
+
 export default function VcardForm({ data, setData, t, ic }) {
+  const { errors, validate } = useValidation()
+
   return (
     <div className="form-section">
-      <div className="field-group">
-        <label className="field-label">{t('vcard.name')}</label>
+      <ValidatedField label={t('vcard.name')} error={errors.name}>
         <input type="text" value={data.name}
           onChange={e => setData({ ...data, name: e.target.value })}
-          placeholder={t('vcard.name_ph')} className={ic} />
-      </div>
+          onBlur={e => validate('name', e.target.value, 'required', t('error.required'))}
+          placeholder={t('vcard.name_ph')} className={`${ic}${errors.name ? ' field-invalid' : ''}`} />
+      </ValidatedField>
       <div className="field-group">
         <label className="field-label">{t('vcard.phone')}</label>
         <input type="tel" value={data.phone}

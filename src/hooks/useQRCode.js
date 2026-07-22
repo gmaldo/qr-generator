@@ -1,16 +1,16 @@
 import { useRef, useEffect, useCallback } from 'react'
 import QRCodeStyling from 'qr-code-styling'
-import { PRESETS, QR_SIZE } from '../config/constants'
+import { PRESETS } from '../config/constants'
 
-export default function useQRCode({ activeTab, qrStyle, activePreset, getQRValue }) {
+export default function useQRCode({ qrStyle, activePreset, getQRValue, qrSize, logo }) {
   const qrContainerRef = useRef(null)
   const qrInstanceRef = useRef(null)
 
   const buildQROptions = useCallback((value, preset, fg, bg) => {
     const p = PRESETS.find(p => p.id === preset) || PRESETS[0]
-    return {
-      width: QR_SIZE,
-      height: QR_SIZE,
+    const opts = {
+      width: qrSize,
+      height: qrSize,
       type: 'svg',
       data: value || 'https://placeholder.com',
       dotsOptions: {
@@ -32,7 +32,18 @@ export default function useQRCode({ activeTab, qrStyle, activePreset, getQRValue
         errorCorrectionLevel: 'H',
       },
     }
-  }, [])
+
+    if (logo?.image) {
+      opts.image = logo.image
+      opts.imageOptions = {
+        hideBackgroundDots: logo.hideBackgroundDots !== false,
+        imageSize: (logo.size || 25) / 100,
+        margin: 4,
+      }
+    }
+
+    return opts
+  }, [qrSize, logo])
 
   // Initialize QR instance once
   useEffect(() => {
@@ -53,26 +64,5 @@ export default function useQRCode({ activeTab, qrStyle, activePreset, getQRValue
     qrInstanceRef.current.update(opts)
   }, [getQRValue, activePreset, qrStyle.fg, qrStyle.bg, buildQROptions])
 
-  const downloadQR = async () => {
-    const qrValue = getQRValue()
-    if (!qrInstanceRef.current || !qrValue) return
-    const fileName = `qr-${activeTab}-${Date.now()}.png`
-
-    if (navigator.canShare) {
-      try {
-        const blob = await qrInstanceRef.current.getRawData('png')
-        const file = new File([blob], fileName, { type: 'image/png' })
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({ files: [file], title: 'Código QR' })
-          return
-        }
-      } catch {
-        // user cancelled or share failed — fall through to download
-      }
-    }
-
-    qrInstanceRef.current.download({ name: `qr-${activeTab}-${Date.now()}`, extension: 'png' })
-  }
-
-  return { qrContainerRef, downloadQR, QR_SIZE }
+  return { qrContainerRef, qrInstanceRef }
 }

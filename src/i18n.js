@@ -84,7 +84,41 @@ export const translations = {
     'qr.preview': 'Vista previa',
     'qr.fill_fields': 'Completá los campos',
     'qr.style': 'Estilo del QR',
+    'qr.size': 'Tamaño del QR',
     'qr.download': 'Descargar PNG',
+    'qr.copy': 'Copiar',
+    'qr.copied': '¡Copiado!',
+    'qr.share': 'Compartir',
+    'qr.logo': 'Logo central',
+    'qr.logo_upload': 'Subir imagen',
+    'qr.logo_size': 'Tamaño',
+    'qr.logo_hide_dots': 'Ocultar puntos debajo del logo',
+    'qr.logo_remove': 'Quitar logo',
+
+    // History
+    'history.title': 'Historial',
+    'history.remove': 'Eliminar',
+    'history.clear': 'Limpiar historial',
+
+    // Instagram
+    'instagram.username': 'Usuario de Instagram',
+    'instagram.username_ph': 'ej. usuario',
+    'instagram.hint': 'El QR enlaza al perfil público del usuario.',
+
+    // Twitter/X
+    'twitter.username': 'Usuario de X (Twitter)',
+    'twitter.username_ph': 'ej. usuario',
+    'twitter.hint': 'El QR enlaza al perfil del usuario en X (Twitter).',
+
+    // YouTube
+    'youtube.type': 'Tipo',
+    'youtube.channel': 'Canal',
+    'youtube.video': 'Video',
+    'youtube.handle': 'Handle del canal',
+    'youtube.handle_ph': 'ej. usuario',
+    'youtube.video_id': 'ID del video',
+    'youtube.video_id_ph': 'ej. dQw4w9WgXcQ',
+    'youtube.hint': 'El QR enlaza al canal o video específico de YouTube.',
 
     // Presets
     'preset.classic': 'Clásico',
@@ -99,6 +133,14 @@ export const translations = {
     'custom.qr_color': 'Color del QR',
     'custom.bg_color': 'Color de fondo',
     'custom.reset': 'Restablecer colores',
+    'custom.invert': 'Invertir colores',
+
+    // Errors
+    'error.required': 'Este campo es obligatorio',
+    'error.invalid_url': 'Ingresá una URL válida',
+    'error.invalid_phone': 'Ingresá un teléfono válido (mín. 8 dígitos)',
+    'error.invalid_email': 'Ingresá un email válido',
+    'error.invalid_coords': 'Ingresá una coordenada válida',
 
     // Footer
     'footer.powered': 'Powered by qr-code-styling',
@@ -189,7 +231,41 @@ export const translations = {
     'qr.preview': 'Preview',
     'qr.fill_fields': 'Fill in the fields',
     'qr.style': 'QR Style',
+    'qr.size': 'QR Size',
     'qr.download': 'Download PNG',
+    'qr.copy': 'Copy',
+    'qr.copied': 'Copied!',
+    'qr.share': 'Share',
+    'qr.logo': 'Center logo',
+    'qr.logo_upload': 'Upload image',
+    'qr.logo_size': 'Size',
+    'qr.logo_hide_dots': 'Hide dots under logo',
+    'qr.logo_remove': 'Remove logo',
+
+    // History
+    'history.title': 'History',
+    'history.remove': 'Remove',
+    'history.clear': 'Clear history',
+
+    // Instagram
+    'instagram.username': 'Instagram username',
+    'instagram.username_ph': 'e.g. username',
+    'instagram.hint': 'The QR links to the user\'s public profile.',
+
+    // Twitter/X
+    'twitter.username': 'X (Twitter) username',
+    'twitter.username_ph': 'e.g. username',
+    'twitter.hint': 'The QR links to the user\'s profile on X (Twitter).',
+
+    // YouTube
+    'youtube.type': 'Type',
+    'youtube.channel': 'Channel',
+    'youtube.video': 'Video',
+    'youtube.handle': 'Channel handle',
+    'youtube.handle_ph': 'e.g. username',
+    'youtube.video_id': 'Video ID',
+    'youtube.video_id_ph': 'e.g. dQw4w9WgXcQ',
+    'youtube.hint': 'The QR links to a specific YouTube channel or video.',
 
     // Presets
     'preset.classic': 'Classic',
@@ -204,6 +280,14 @@ export const translations = {
     'custom.qr_color': 'QR color',
     'custom.bg_color': 'Background color',
     'custom.reset': 'Reset colors',
+    'custom.invert': 'Invert colors',
+
+    // Errors
+    'error.required': 'This field is required',
+    'error.invalid_url': 'Enter a valid URL',
+    'error.invalid_phone': 'Enter a valid phone (min. 8 digits)',
+    'error.invalid_email': 'Enter a valid email',
+    'error.invalid_coords': 'Enter valid coordinates',
 
     // Footer
     'footer.powered': 'Powered by qr-code-styling',
@@ -294,7 +378,41 @@ export const translations = {
     'qr.preview': 'Pré-visualização',
     'qr.fill_fields': 'Preencha os campos',
     'qr.style': 'Estilo do QR',
+    'qr.size': 'Tamanho do QR',
     'qr.download': 'Baixar PNG',
+    'qr.copy': 'Copiar',
+    'qr.copied': 'Copiado!',
+    'qr.share': 'Compartilhar',
+    'qr.logo': 'Logo central',
+    'qr.logo_upload': 'Enviar imagem',
+    'qr.logo_size': 'Tamanho',
+    'qr.logo_hide_dots': 'Ocultar pontos sob o logo',
+    'qr.logo_remove': 'Remover logo',
+
+    // History
+    'history.title': 'Histórico',
+    'history.remove': 'Remover',
+    'history.clear': 'Limpar histórico',
+
+    // Instagram
+    'instagram.username': 'Nome de usuário do Instagram',
+    'instagram.username_ph': 'ex. usuario',
+    'instagram.hint': 'O QR linka para o perfil público do usuário.',
+
+    // Twitter/X
+    'twitter.username': 'Nome de usuário do X (Twitter)',
+    'twitter.username_ph': 'ex. usuario',
+    'twitter.hint': 'O QR linka para o perfil do usuário no X (Twitter).',
+
+    // YouTube
+    'youtube.type': 'Tipo',
+    'youtube.channel': 'Canal',
+    'youtube.video': 'Vídeo',
+    'youtube.handle': 'Handle do canal',
+    'youtube.handle_ph': 'ex. usuario',
+    'youtube.video_id': 'ID do vídeo',
+    'youtube.video_id_ph': 'ex. dQw4w9WgXcQ',
+    'youtube.hint': 'O QR linka para um canal ou vídeo específico do YouTube.',
 
     // Presets
     'preset.classic': 'Clássico',
@@ -309,6 +427,14 @@ export const translations = {
     'custom.qr_color': 'Cor do QR',
     'custom.bg_color': 'Cor de fundo',
     'custom.reset': 'Redefinir cores',
+    'custom.invert': 'Inverter cores',
+
+    // Errors
+    'error.required': 'Este campo é obrigatório',
+    'error.invalid_url': 'Insira uma URL válida',
+    'error.invalid_phone': 'Insira um telefone válido (mín. 8 dígitos)',
+    'error.invalid_email': 'Insira um email válido',
+    'error.invalid_coords': 'Insira coordenadas válidas',
 
     // Footer
     'footer.powered': 'Powered by qr-code-styling',

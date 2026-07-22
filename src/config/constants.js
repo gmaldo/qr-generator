@@ -8,6 +8,9 @@ export const TABS = [
   { id: 'sms', icon: '✉️' },
   { id: 'vcard', icon: '👤' },
   { id: 'location', icon: '📍' },
+  { id: 'instagram', icon: '📷' },
+  { id: 'twitter', icon: '🐦' },
+  { id: 'youtube', icon: '▶️' },
 ]
 
 export const WIFI_SECURITY = ['WPA', 'WEP', 'nopass']
@@ -59,6 +62,12 @@ export const PRESETS = [
 
 export const QR_SIZE = 220
 
+export const QR_SIZES = [
+  { label: '200px', value: 200 },
+  { label: '400px', value: 400 },
+  { label: '800px', value: 800 },
+]
+
 export const FOCUS_CLASSES = {
   wifi: 'focus-cyan',
   website: 'focus-violet',
@@ -69,4 +78,7 @@ export const FOCUS_CLASSES = {
   sms: 'focus-violet',
   vcard: 'focus-blue',
   location: 'focus-amber',
+  instagram: 'focus-pink',
+  twitter: 'focus-cyan',
+  youtube: 'focus-rose',
 }

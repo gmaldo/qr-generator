@@ -1,14 +1,18 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { detectLang, makeT } from './i18n'
-import { TABS, PRESETS, FOCUS_CLASSES } from './config/constants'
+import { TABS, PRESETS, QR_SIZES, FOCUS_CLASSES } from './config/constants'
 import useQRCode from './hooks/useQRCode'
 import Header from './components/Header'
 import Tabs from './components/Tabs'
 import FormSwitch from './components/forms'
 import QRPreview from './components/qr/QRPreview'
 import PresetSelector from './components/qr/PresetSelector'
-import DownloadButton from './components/qr/DownloadButton'
+import useHistory from './hooks/useHistory'
+import LogoUploader from './components/qr/LogoUploader'
+import SizeSelector from './components/qr/SizeSelector'
+import DownloadActions from './components/qr/DownloadButton'
 import ColorCustomizer from './components/qr/ColorCustomizer'
+import HistoryPanel from './components/qr/HistoryPanel'
 import Footer from './components/Footer'
 import './index.css'
 
@@ -32,8 +36,13 @@ function App() {
   const [smsData, setSmsData] = useState({ phone: '', message: '' })
   const [vcardData, setVcardData] = useState({ name: '', phone: '', email: '', org: '', url: '' })
   const [locationData, setLocationData] = useState({ lat: '', lng: '', label: '', showMap: false })
+  const [instagramData, setInstagramData] = useState({ username: '' })
+  const [twitterData, setTwitterData] = useState({ username: '' })
+  const [youtubeData, setYoutubeData] = useState({ type: 'channel', handle: '', videoId: '' })
   const [qrStyle, setQrStyle] = useState({ fg: '#000000', bg: '#ffffff', showCustomizer: false })
   const [activePreset, setActivePreset] = useState('classic')
+  const [qrSize, setQrSize] = useState(220)
+  const [logo, setLogo] = useState({ image: null, size: 25, hideBackgroundDots: true })
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId)
@@ -123,12 +132,35 @@ function App() {
           : `geo:${lat},${lng}`
       }
 
+      case 'instagram': {
+        if (!instagramData.username) return ''
+        const igUser = instagramData.username.replace('@', '').trim()
+        return `https://instagram.com/${igUser}`
+      }
+
+      case 'twitter': {
+        if (!twitterData.username) return ''
+        const twUser = twitterData.username.replace('@', '').trim()
+        return `https://x.com/${twUser}`
+      }
+
+      case 'youtube': {
+        if (youtubeData.type === 'video') {
+          if (!youtubeData.videoId) return ''
+          return `https://youtu.be/${youtubeData.videoId.trim()}`
+        }
+        if (!youtubeData.handle) return ''
+        const ytHandle = youtubeData.handle.replace('@', '').trim()
+        return `https://youtube.com/@${ytHandle}`
+      }
+
       default: return ''
     }
-  }, [activeTab, wifiData, websiteData, textData, whatsappData, emailData, phoneData, smsData, vcardData, locationData])
+  }, [activeTab, wifiData, websiteData, textData, whatsappData, emailData, phoneData, smsData, vcardData, locationData, instagramData, twitterData, youtubeData])
 
-  const { qrContainerRef, downloadQR } = useQRCode({ activeTab, qrStyle, activePreset, getQRValue })
+  const { qrContainerRef, qrInstanceRef } = useQRCode({ qrStyle, activePreset, getQRValue, qrSize, logo })
   const qrValue = getQRValue()
+  const { history, addItem: addToHistory, removeItem: removeFromHistory, clearAll: clearHistory } = useHistory()
 
   const focusClass = FOCUS_CLASSES[activeTab]
   const ic = `field-input ${focusClass}`
@@ -144,9 +176,33 @@ function App() {
     sms: { data: smsData, set: setSmsData },
     vcard: { data: vcardData, set: setVcardData },
     location: { data: locationData, set: setLocationData },
+    instagram: { data: instagramData, set: setInstagramData },
+    twitter: { data: twitterData, set: setTwitterData },
+    youtube: { data: youtubeData, set: setYoutubeData },
   }
 
   const { data: currentFormData, set: setCurrentFormData } = FORM_DATA_MAP[activeTab]
+
+  const saveToHistory = () => {
+    if (!qrValue) return
+    addToHistory({
+      tab: activeTab,
+      data: { ...currentFormData },
+      preset: activePreset,
+      fg: qrStyle.fg,
+      bg: qrStyle.bg,
+      size: qrSize,
+    })
+  }
+
+  const restoreFromHistory = (item) => {
+    setActiveTab(item.tab)
+    setFormKey(k => k + 1)
+    setCurrentFormData(item.data)
+    setActivePreset(item.preset)
+    setQrStyle(s => ({ ...s, fg: item.fg, bg: item.bg }))
+    if (item.size) setQrSize(item.size)
+  }
 
   return (
     <>
@@ -179,7 +235,7 @@ function App() {
           <div className="qr-section">
             <span className="qr-label">{t('qr.preview')}</span>
 
-            <QRPreview qrContainerRef={qrContainerRef} qrValue={qrValue} t={t} />
+            <QRPreview qrContainerRef={qrContainerRef} qrValue={qrValue} t={t} qrSize={qrSize} />
 
             <PresetSelector
               presets={PRESETS}
@@ -188,11 +244,34 @@ function App() {
               t={t}
             />
 
+            <SizeSelector
+              sizes={QR_SIZES}
+              activeSize={qrSize}
+              onSelect={setQrSize}
+              t={t}
+            />
+
             {qrValue && (
-              <DownloadButton onClick={downloadQR} activeTab={activeTab} t={t} />
+              <DownloadActions
+                qrInstanceRef={qrInstanceRef}
+                activeTab={activeTab}
+                qrValue={qrValue}
+                t={t}
+                onSave={saveToHistory}
+              />
             )}
 
             <ColorCustomizer qrStyle={qrStyle} setQrStyle={setQrStyle} t={t} />
+
+            <LogoUploader logo={logo} setLogo={setLogo} t={t} />
+
+            <HistoryPanel
+              history={history}
+              onRestore={restoreFromHistory}
+              onRemove={removeFromHistory}
+              onClear={clearHistory}
+              t={t}
+            />
 
           </div>
         </div>

@@ -1,8 +1,11 @@
 import MapPicker from '../../MapPicker'
 import useLocationSearch from '../../hooks/useLocationSearch'
+import ValidatedField from './ValidatedField'
+import useValidation from './useValidation'
 
 export default function LocationForm({ data, setData, t, ic }) {
   const { locationSearch, handleLocationSearch, selectSearchResult, clearSearch } = useLocationSearch(setData)
+  const { errors, validate } = useValidation()
 
   const useMyLocation = () => {
     if (!navigator.geolocation) return
@@ -86,18 +89,18 @@ export default function LocationForm({ data, setData, t, ic }) {
         </div>
       ) : (
         <div className="field-row-2">
-          <div className="field-group">
-            <label className="field-label">{t('location.lat')}</label>
+          <ValidatedField label={t('location.lat')} error={errors.lat}>
             <input type="text" value={data.lat}
               onChange={e => setData({ ...data, lat: e.target.value })}
-              placeholder="-34.6037" className={ic} />
-          </div>
-          <div className="field-group">
-            <label className="field-label">{t('location.lng')}</label>
+              onBlur={e => validate('lat', e.target.value, 'coordinates', t('error.invalid_coords'))}
+              placeholder="-34.6037" className={`${ic}${errors.lat ? ' field-invalid' : ''}`} />
+          </ValidatedField>
+          <ValidatedField label={t('location.lng')} error={errors.lng}>
             <input type="text" value={data.lng}
               onChange={e => setData({ ...data, lng: e.target.value })}
-              placeholder="-58.3816" className={ic} />
-          </div>
+              onBlur={e => validate('lng', e.target.value, 'coordinates', t('error.invalid_coords'))}
+              placeholder="-58.3816" className={`${ic}${errors.lng ? ' field-invalid' : ''}`} />
+          </ValidatedField>
         </div>
       )}
 

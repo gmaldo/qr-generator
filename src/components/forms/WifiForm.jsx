@@ -1,15 +1,19 @@
 import { WIFI_SECURITY } from '../../config/constants'
+import ValidatedField from './ValidatedField'
+import useValidation from './useValidation'
 
 export default function WifiForm({ data, setData, t, ic }) {
+  const { errors, validate } = useValidation()
+
   return (
     <div className="form-section">
-      <div className="field-group">
-        <label className="field-label">{t('wifi.ssid')}</label>
+      <ValidatedField label={t('wifi.ssid')} error={errors.ssid}>
         <input type="text" value={data.ssid}
           onChange={e => setData({ ...data, ssid: e.target.value })}
-          placeholder={t('wifi.ssid_ph')} className={ic}
+          onBlur={e => validate('ssid', e.target.value, 'required', t('error.required'))}
+          placeholder={t('wifi.ssid_ph')} className={`${ic}${errors.ssid ? ' field-invalid' : ''}`}
           autoCorrect="off" autoCapitalize="none" spellCheck="false" autoComplete="off" />
-      </div>
+      </ValidatedField>
       <div className="field-group">
         <label className="field-label">{t('wifi.password')}</label>
         <input type="text" value={data.password}
