@@ -1,6 +1,6 @@
 import { SUPPORTED_LANGS } from '../i18n'
 
-export default function Header({ t, lang, setLang }) {
+export default function Header({ t, lang, setLang, theme, onToggleTheme }) {
   return (
     <header className="header anim-fade-up">
       <div className="logo-icon">
@@ -13,16 +13,26 @@ export default function Header({ t, lang, setLang }) {
       <div className="badge">{t('header.badge')}</div>
       <h1 className="app-title">{t('header.title')}</h1>
       <p className="app-subtitle">{t('header.subtitle')}</p>
-      <div className="lang-selector">
-        {SUPPORTED_LANGS.map(l => (
-          <button
-            key={l.code}
-            className={`lang-btn${lang === l.code ? ' active' : ''}`}
-            onClick={() => setLang(l.code)}
-          >
-            {l.label}
-          </button>
-        ))}
+      <div className="header-controls">
+        <div className="lang-selector">
+          {SUPPORTED_LANGS.map(l => (
+            <button
+              key={l.code}
+              className={`lang-btn${lang === l.code ? ' active' : ''}`}
+              onClick={() => setLang(l.code)}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
+        <button
+          className="theme-toggle"
+          onClick={onToggleTheme}
+          aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+          title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
       </div>
     </header>
   )

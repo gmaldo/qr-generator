@@ -1,10 +1,9 @@
-export default function QRPreview({ qrContainerRef, qrValue, t, qrSize }) {
+export default function QRPreview({ qrContainerRef, qrValue, t }) {
   return (
     <div className={`qr-frame${qrValue ? ' has-qr' : ' empty'}`}>
       <div
         ref={qrContainerRef}
         className={`qr-render${!qrValue ? ' qr-render--empty' : ''}`}
-        style={{ width: qrSize, height: qrSize }}
       />
       {!qrValue && (
         <div className="qr-placeholder-overlay">

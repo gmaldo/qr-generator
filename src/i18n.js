@@ -15,6 +15,9 @@ export const translations = {
     'tab.sms': 'SMS',
     'tab.vcard': 'Contacto',
     'tab.location': 'Ubicación',
+    'tab.instagram': 'Instagram',
+    'tab.twitter': 'X/Twitter',
+    'tab.youtube': 'YouTube',
 
     // WiFi
     'wifi.ssid': 'Nombre WiFi (SSID)',
@@ -162,6 +165,9 @@ export const translations = {
     'tab.sms': 'SMS',
     'tab.vcard': 'Contact',
     'tab.location': 'Location',
+    'tab.instagram': 'Instagram',
+    'tab.twitter': 'X/Twitter',
+    'tab.youtube': 'YouTube',
 
     // WiFi
     'wifi.ssid': 'WiFi Name (SSID)',
@@ -309,6 +315,9 @@ export const translations = {
     'tab.sms': 'SMS',
     'tab.vcard': 'Contato',
     'tab.location': 'Localização',
+    'tab.instagram': 'Instagram',
+    'tab.twitter': 'X/Twitter',
+    'tab.youtube': 'YouTube',
 
     // WiFi
     'wifi.ssid': 'Nome WiFi (SSID)',

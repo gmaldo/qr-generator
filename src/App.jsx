@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
+import { flushSync } from 'react-dom'
 import { detectLang, makeT } from './i18n'
 import { TABS, PRESETS, QR_SIZES, FOCUS_CLASSES } from './config/constants'
 import useQRCode from './hooks/useQRCode'
@@ -19,6 +20,46 @@ import './index.css'
 function App() {
   const [lang, setLang] = useState(detectLang)
   const t = useMemo(() => makeT(lang), [lang])
+
+  const [theme, setTheme] = useState(() => {
+    return document.documentElement.getAttribute('data-theme') || 'dark'
+  })
+
+  const toggleTheme = useCallback((e) => {
+    const apply = () => {
+      setTheme(prev => {
+        const next = prev === 'dark' ? 'light' : 'dark'
+        document.documentElement.setAttribute('data-theme', next)
+        localStorage.setItem('qr-theme', next)
+        return next
+      })
+    }
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!document.startViewTransition || reduceMotion) {
+      apply()
+      return
+    }
+
+    const rect = e?.currentTarget?.getBoundingClientRect()
+    const x = rect ? rect.left + rect.width / 2 : window.innerWidth / 2
+    const y = rect ? rect.top + rect.height / 2 : window.innerHeight / 2
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    )
+
+    const transition = document.startViewTransition(() => {
+      flushSync(apply)
+    })
+
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`] },
+        { duration: 600, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+      )
+    }).catch(() => {})
+  }, [])
 
   useEffect(() => {
     localStorage.setItem('qr-lang', lang)
@@ -213,7 +254,7 @@ function App() {
     </div>
     <div className="app-wrapper">
 
-      <Header t={t} lang={lang} setLang={setLang} />
+      <Header t={t} lang={lang} setLang={setLang} theme={theme} onToggleTheme={toggleTheme} />
 
       <main className="main-card anim-fade-up anim-fade-up-d1">
 
@@ -235,7 +276,7 @@ function App() {
           <div className="qr-section">
             <span className="qr-label">{t('qr.preview')}</span>
 
-            <QRPreview qrContainerRef={qrContainerRef} qrValue={qrValue} t={t} qrSize={qrSize} />
+             <QRPreview qrContainerRef={qrContainerRef} qrValue={qrValue} t={t} />
 
             <PresetSelector
               presets={PRESETS}

@@ -1,3 +1,6 @@
+import { TAB_ICONS } from '../config/constants'
+import TabIcon from './TabIcon'
+
 export default function Tabs({ tabs, activeTab, onTabChange, t }) {
   return (
     <nav className="tabs-container" role="tablist">
@@ -10,7 +13,9 @@ export default function Tabs({ tabs, activeTab, onTabChange, t }) {
           className={`tab-btn${activeTab === tab.id ? ' active' : ''}`}
           onClick={() => onTabChange(tab.id)}
         >
-          <span className="tab-icon">{tab.icon}</span>
+          <span className="tab-icon">
+            {TAB_ICONS[tab.id] ? <TabIcon tabId={tab.id} /> : tab.icon}
+          </span>
           <span>{t(`tab.${tab.id}`)}</span>
         </button>
       ))}
