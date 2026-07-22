@@ -25,19 +25,14 @@ export default function DownloadActions({ qrInstanceRef, activeTab, qrValue, t, 
     if (!qrInstanceRef.current || !qrValue) return
     try {
       const blob = await qrInstanceRef.current.getRawData('png')
-
-      if (isStandalone() && navigator.canShare?.({ files: [new File([blob], 'qr.png', { type: 'image/png' })] })) {
-        const file = new File([blob], 'qr.png', { type: 'image/png' })
-        await navigator.share({ files: [file], title: 'Código QR' })
-      } else {
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-      }
-
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': blob })
+      ])
       setCopied(true)
       onSave?.()
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // clipboard/share not available
+      // clipboard not available
     }
   }
 
