@@ -1,13 +1,14 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { flushSync } from 'react-dom'
 import { detectLang, makeT } from './i18n'
-import { TABS, PRESETS, QR_SIZES, FOCUS_CLASSES } from './config/constants'
+import { TABS, PRESETS, QR_SHAPES, QR_SIZE, QR_SIZES, QR_STYLE_DEFAULTS, FOCUS_CLASSES } from './config/constants'
 import useQRCode from './hooks/useQRCode'
 import Header from './components/Header'
 import Tabs from './components/Tabs'
 import FormSwitch from './components/forms'
 import QRPreview from './components/qr/QRPreview'
 import PresetSelector from './components/qr/PresetSelector'
+import ShapeSelector from './components/qr/ShapeSelector'
 import useHistory from './hooks/useHistory'
 import LogoUploader from './components/qr/LogoUploader'
 import SizeSelector from './components/qr/SizeSelector'
@@ -80,9 +81,10 @@ function App() {
   const [instagramData, setInstagramData] = useState({ username: '' })
   const [twitterData, setTwitterData] = useState({ username: '' })
   const [youtubeData, setYoutubeData] = useState({ type: 'channel', handle: '', videoId: '' })
-  const [qrStyle, setQrStyle] = useState({ fg: '#000000', bg: '#ffffff', showCustomizer: false })
+  const [qrStyle, setQrStyle] = useState({ ...QR_STYLE_DEFAULTS, showCustomizer: false })
   const [activePreset, setActivePreset] = useState('classic')
-  const [qrSize, setQrSize] = useState(220)
+  const [qrShape, setQrShape] = useState('square')
+  const [qrSize, setQrSize] = useState(QR_SIZE)
   const [logo, setLogo] = useState({ image: null, size: 25, hideBackgroundDots: true })
 
   const handleTabChange = (tabId) => {
@@ -199,7 +201,7 @@ function App() {
     }
   }, [activeTab, wifiData, websiteData, textData, whatsappData, emailData, phoneData, smsData, vcardData, locationData, instagramData, twitterData, youtubeData])
 
-  const { qrContainerRef, qrInstanceRef } = useQRCode({ qrStyle, activePreset, getQRValue, qrSize, logo })
+  const { qrContainerRef, qrInstanceRef } = useQRCode({ qrStyle, activePreset, getQRValue, qrSize, logo, qrShape })
   const qrValue = getQRValue()
   const { history, addItem: addToHistory, removeItem: removeFromHistory, clearAll: clearHistory } = useHistory()
 
@@ -232,6 +234,11 @@ function App() {
       preset: activePreset,
       fg: qrStyle.fg,
       bg: qrStyle.bg,
+      fg2: qrStyle.fg2,
+      gradient: qrStyle.gradient,
+      gradientType: qrStyle.gradientType,
+      gradientAngle: qrStyle.gradientAngle,
+      shape: qrShape,
       size: qrSize,
     })
   }
@@ -241,8 +248,27 @@ function App() {
     setFormKey(k => k + 1)
     setCurrentFormData(item.data)
     setActivePreset(item.preset)
-    setQrStyle(s => ({ ...s, fg: item.fg, bg: item.bg }))
+    setQrStyle(s => ({
+      ...s,
+      fg: item.fg,
+      bg: item.bg,
+      fg2: item.fg2 ?? s.fg2,
+      gradient: item.gradient ?? s.gradient,
+      gradientType: item.gradientType ?? s.gradientType,
+      gradientAngle: item.gradientAngle ?? s.gradientAngle,
+    }))
+    if (item.shape) setQrShape(item.shape)
     if (item.size) setQrSize(item.size)
+  }
+
+  // One escape hatch for the whole look: preset, colours, gradient, shape,
+  // size and logo all go back to what a freshly opened code looks like.
+  const resetQrStyle = () => {
+    setActivePreset('classic')
+    setQrShape('square')
+    setQrSize(QR_SIZE)
+    setLogo({ image: null, size: 25, hideBackgroundDots: true })
+    setQrStyle(s => ({ ...QR_STYLE_DEFAULTS, showCustomizer: s.showCustomizer }))
   }
 
   return (
@@ -285,6 +311,13 @@ function App() {
               t={t}
             />
 
+            <ShapeSelector
+              shapes={QR_SHAPES}
+              activeShape={qrShape}
+              onSelect={setQrShape}
+              t={t}
+            />
+
             <SizeSelector
               sizes={QR_SIZES}
               activeSize={qrSize}
@@ -305,6 +338,14 @@ function App() {
             <ColorCustomizer qrStyle={qrStyle} setQrStyle={setQrStyle} t={t} />
 
             <LogoUploader logo={logo} setLogo={setLogo} t={t} />
+
+            <button
+              type="button"
+              className="reset-style-btn"
+              onClick={resetQrStyle}
+            >
+              {t('qr.reset_style')}
+            </button>
 
             <HistoryPanel
               history={history}

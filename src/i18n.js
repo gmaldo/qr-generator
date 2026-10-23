@@ -99,6 +99,12 @@ export const translations = {
     'qr.logo_size': 'Tamaño',
     'qr.logo_hide_dots': 'Ocultar puntos debajo del logo',
     'qr.logo_remove': 'Quitar logo',
+    'qr.reset_style': 'Restablecer estilo',
+
+    // Shape
+    'shape.label': 'Forma del código',
+    'shape.square': 'Cuadrado',
+    'shape.circle': 'Círculo',
 
     // History
     'history.title': 'Historial',
@@ -132,6 +138,11 @@ export const translations = {
     'preset.classy': 'Elegante',
     'preset.classy-rounded': 'Mixto',
     'preset.extra-rounded': 'Fluido',
+    'preset.pixel': 'Píxel',
+    'preset.orbit': 'Órbita',
+    'preset.frame': 'Marco',
+    'preset.beads': 'Perlas',
+    'preset.halo': 'Halo',
 
     // Customizer
     'custom.title': 'Personalizar colores',
@@ -139,6 +150,11 @@ export const translations = {
     'custom.bg_color': 'Color de fondo',
     'custom.reset': 'Restablecer colores',
     'custom.invert': 'Invertir colores',
+    'custom.gradient': 'Degradado',
+    'custom.gradient_to': 'Color final',
+    'custom.linear': 'Lineal',
+    'custom.radial': 'Radial',
+    'custom.angle': 'Ángulo',
 
     // Errors
     'error.required': 'Este campo es obligatorio',
@@ -251,6 +267,12 @@ export const translations = {
     'qr.logo_size': 'Size',
     'qr.logo_hide_dots': 'Hide dots under logo',
     'qr.logo_remove': 'Remove logo',
+    'qr.reset_style': 'Reset style',
+
+    // Shape
+    'shape.label': 'Code shape',
+    'shape.square': 'Square',
+    'shape.circle': 'Circle',
 
     // History
     'history.title': 'History',
@@ -284,6 +306,11 @@ export const translations = {
     'preset.classy': 'Classy',
     'preset.classy-rounded': 'Mixed',
     'preset.extra-rounded': 'Fluid',
+    'preset.pixel': 'Pixel',
+    'preset.orbit': 'Orbit',
+    'preset.frame': 'Frame',
+    'preset.beads': 'Beads',
+    'preset.halo': 'Halo',
 
     // Customizer
     'custom.title': 'Customize colors',
@@ -291,6 +318,11 @@ export const translations = {
     'custom.bg_color': 'Background color',
     'custom.reset': 'Reset colors',
     'custom.invert': 'Invert colors',
+    'custom.gradient': 'Gradient',
+    'custom.gradient_to': 'End colour',
+    'custom.linear': 'Linear',
+    'custom.radial': 'Radial',
+    'custom.angle': 'Angle',
 
     // Errors
     'error.required': 'This field is required',
@@ -403,6 +435,12 @@ export const translations = {
     'qr.logo_size': 'Tamanho',
     'qr.logo_hide_dots': 'Ocultar pontos sob o logo',
     'qr.logo_remove': 'Remover logo',
+    'qr.reset_style': 'Redefinir estilo',
+
+    // Shape
+    'shape.label': 'Formato do código',
+    'shape.square': 'Quadrado',
+    'shape.circle': 'Círculo',
 
     // History
     'history.title': 'Histórico',
@@ -436,6 +474,11 @@ export const translations = {
     'preset.classy': 'Elegante',
     'preset.classy-rounded': 'Misto',
     'preset.extra-rounded': 'Fluido',
+    'preset.pixel': 'Pixel',
+    'preset.orbit': 'Órbita',
+    'preset.frame': 'Moldura',
+    'preset.beads': 'Pérolas',
+    'preset.halo': 'Halo',
 
     // Customizer
     'custom.title': 'Personalizar cores',
@@ -443,6 +486,11 @@ export const translations = {
     'custom.bg_color': 'Cor de fundo',
     'custom.reset': 'Redefinir cores',
     'custom.invert': 'Inverter cores',
+    'custom.gradient': 'Gradiente',
+    'custom.gradient_to': 'Cor final',
+    'custom.linear': 'Linear',
+    'custom.radial': 'Radial',
+    'custom.angle': 'Ângulo',
 
     // Errors
     'error.required': 'Este campo é obrigatório',

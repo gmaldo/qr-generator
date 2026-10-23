@@ -1,4 +1,3 @@
-import { TAB_ICONS } from '../config/constants'
 import TabIcon from './TabIcon'
 
 export default function Tabs({ tabs, activeTab, onTabChange, t }) {
@@ -14,7 +13,7 @@ export default function Tabs({ tabs, activeTab, onTabChange, t }) {
           onClick={() => onTabChange(tab.id)}
         >
           <span className="tab-icon">
-            {TAB_ICONS[tab.id] ? <TabIcon tabId={tab.id} /> : tab.icon}
+            <TabIcon tabId={tab.id} />
           </span>
           <span>{t(`tab.${tab.id}`)}</span>
         </button>
