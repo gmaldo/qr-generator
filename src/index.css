@@ -412,6 +412,43 @@ body::after {
   box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
 }
 
+.tab-btn.active[data-tab="event"] {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+
+.tab-btn.active[data-tab="tiktok"] {
+  background: linear-gradient(135deg, #06b6d4, #f43f5e);
+  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.35);
+}
+
+.tab-btn.active[data-tab="linkedin"] {
+  background: linear-gradient(135deg, #2563eb, #0ea5e9);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+.tab-btn.active[data-tab="telegram"] {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+}
+
+/* The "more" toggle is the only non-tab inside the tablist, so it gets the
+   dashed treatment the app reserves for secondary actions — it reads as a
+   disclosure, not as another type. */
+.tab-more {
+  border: 1px dashed var(--border-subtle);
+}
+
+.tab-more .tab-icon svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--transition-mid);
+}
+
+.tab-more.open .tab-icon svg {
+  transform: rotate(180deg);
+}
+
 /* ===================== FORM ===================== */
 .form-section {
   display: flex;

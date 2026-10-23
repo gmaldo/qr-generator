@@ -78,9 +78,13 @@ function App() {
   const [smsData, setSmsData] = useState({ phone: '', message: '' })
   const [vcardData, setVcardData] = useState({ name: '', phone: '', email: '', org: '', url: '' })
   const [locationData, setLocationData] = useState({ lat: '', lng: '', label: '', showMap: false })
+  const [eventData, setEventData] = useState({ title: '', start: '', end: '', location: '', description: '' })
   const [instagramData, setInstagramData] = useState({ username: '' })
   const [twitterData, setTwitterData] = useState({ username: '' })
   const [youtubeData, setYoutubeData] = useState({ type: 'channel', handle: '', videoId: '' })
+  const [tiktokData, setTiktokData] = useState({ username: '' })
+  const [linkedinData, setLinkedinData] = useState({ type: 'profile', username: '' })
+  const [telegramData, setTelegramData] = useState({ username: '' })
   const [qrStyle, setQrStyle] = useState({ ...QR_STYLE_DEFAULTS, showCustomizer: false })
   const [activePreset, setActivePreset] = useState('classic')
   const [qrShape, setQrShape] = useState('square')
@@ -175,6 +179,29 @@ function App() {
           : `geo:${lat},${lng}`
       }
 
+      case 'event': {
+        if (!eventData.title || !eventData.start) return ''
+        // iCalendar text fields escape \ ; , and newlines, or a comma in the
+        // title splits the property and the scanner reads a broken event.
+        const esc = v => v.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n')
+        const toIcs = dt => dt ? dt.replace(/[-:]/g, '') + '00' : ''
+        const lines = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:-//QR Generator//Event//ES',
+          'BEGIN:VEVENT',
+          `UID:${Date.now()}@qr-generator`,
+          `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').replace(/\..+/, '')}Z`,
+          `DTSTART:${toIcs(eventData.start)}`,
+        ]
+        if (eventData.end) lines.push(`DTEND:${toIcs(eventData.end)}`)
+        lines.push(`SUMMARY:${esc(eventData.title)}`)
+        if (eventData.location) lines.push(`LOCATION:${esc(eventData.location)}`)
+        if (eventData.description) lines.push(`DESCRIPTION:${esc(eventData.description)}`)
+        lines.push('END:VEVENT', 'END:VCALENDAR')
+        return lines.join('\n')
+      }
+
       case 'instagram': {
         if (!instagramData.username) return ''
         const igUser = instagramData.username.replace('@', '').trim()
@@ -197,9 +224,29 @@ function App() {
         return `https://youtube.com/@${ytHandle}`
       }
 
+      case 'tiktok': {
+        if (!tiktokData.username) return ''
+        const ttUser = tiktokData.username.replace('@', '').trim()
+        return `https://www.tiktok.com/@${ttUser}`
+      }
+
+      case 'linkedin': {
+        if (!linkedinData.username) return ''
+        const liUser = linkedinData.username.trim()
+        return linkedinData.type === 'company'
+          ? `https://www.linkedin.com/company/${liUser}`
+          : `https://www.linkedin.com/in/${liUser}`
+      }
+
+      case 'telegram': {
+        if (!telegramData.username) return ''
+        const tgUser = telegramData.username.replace(/^@/, '').replace(/^t\.me\//, '').trim()
+        return `https://t.me/${tgUser}`
+      }
+
       default: return ''
     }
-  }, [activeTab, wifiData, websiteData, textData, whatsappData, emailData, phoneData, smsData, vcardData, locationData, instagramData, twitterData, youtubeData])
+  }, [activeTab, wifiData, websiteData, textData, whatsappData, emailData, phoneData, smsData, vcardData, locationData, eventData, instagramData, twitterData, youtubeData, tiktokData, linkedinData, telegramData])
 
   const { qrContainerRef, qrInstanceRef } = useQRCode({ qrStyle, activePreset, getQRValue, qrSize, logo, qrShape })
   const qrValue = getQRValue()
@@ -219,9 +266,13 @@ function App() {
     sms: { data: smsData, set: setSmsData },
     vcard: { data: vcardData, set: setVcardData },
     location: { data: locationData, set: setLocationData },
+    event: { data: eventData, set: setEventData },
     instagram: { data: instagramData, set: setInstagramData },
     twitter: { data: twitterData, set: setTwitterData },
     youtube: { data: youtubeData, set: setYoutubeData },
+    tiktok: { data: tiktokData, set: setTiktokData },
+    linkedin: { data: linkedinData, set: setLinkedinData },
+    telegram: { data: telegramData, set: setTelegramData },
   }
 
   const { data: currentFormData, set: setCurrentFormData } = FORM_DATA_MAP[activeTab]
@@ -246,7 +297,10 @@ function App() {
   const restoreFromHistory = (item) => {
     setActiveTab(item.tab)
     setFormKey(k => k + 1)
-    setCurrentFormData(item.data)
+    // Write through the item's own tab setter, not the current tab's:
+    // `setCurrentFormData` was captured before the tab switch, so it used
+    // to land the restored data in the wrong form and corrupt it.
+    FORM_DATA_MAP[item.tab]?.set(item.data)
     setActivePreset(item.preset)
     setQrStyle(s => ({
       ...s,

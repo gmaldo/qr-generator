@@ -7,9 +7,13 @@ import PhoneForm from './PhoneForm'
 import SmsForm from './SmsForm'
 import VcardForm from './VcardForm'
 import LocationForm from './LocationForm'
+import EventForm from './EventForm'
 import InstagramForm from './InstagramForm'
 import TwitterForm from './TwitterForm'
 import YouTubeForm from './YouTubeForm'
+import TiktokForm from './TiktokForm'
+import LinkedinForm from './LinkedinForm'
+import TelegramForm from './TelegramForm'
 
 const FORM_MAP = {
   wifi: WifiForm,
@@ -21,9 +25,13 @@ const FORM_MAP = {
   sms: SmsForm,
   vcard: VcardForm,
   location: LocationForm,
+  event: EventForm,
   instagram: InstagramForm,
   twitter: TwitterForm,
   youtube: YouTubeForm,
+  tiktok: TiktokForm,
+  linkedin: LinkedinForm,
+  telegram: TelegramForm,
 }
 
 export default function FormSwitch({ activeTab, formData, setFormData, t, ic, tc }) {

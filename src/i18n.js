@@ -18,6 +18,12 @@ export const translations = {
     'tab.instagram': 'Instagram',
     'tab.twitter': 'X/Twitter',
     'tab.youtube': 'YouTube',
+    'tab.event': 'Evento',
+    'tab.tiktok': 'TikTok',
+    'tab.linkedin': 'LinkedIn',
+    'tab.telegram': 'Telegram',
+    'tabs.more': 'Más',
+    'tabs.less': 'Menos',
 
     // WiFi
     'wifi.ssid': 'Nombre WiFi (SSID)',
@@ -131,6 +137,36 @@ export const translations = {
     'youtube.video_id_ph': 'ej. dQw4w9WgXcQ',
     'youtube.hint': 'El QR enlaza al canal o video específico de YouTube.',
 
+    // Event
+    'event.title': 'Título del evento',
+    'event.title_ph': 'ej. Cumpleaños de Ana',
+    'event.start': 'Inicio',
+    'event.end': 'Fin',
+    'event.location': 'Lugar',
+    'event.location_ph': 'ej. Salón de fiestas',
+    'event.description': 'Descripción',
+    'event.description_ph': 'Detalles del evento...',
+    'event.hint': 'El QR agrega el evento al calendario de quien lo escanea.',
+
+    // TikTok
+    'tiktok.username': 'Usuario de TikTok',
+    'tiktok.username_ph': 'ej. usuario',
+    'tiktok.hint': 'El QR enlaza al perfil público de TikTok.',
+
+    // LinkedIn
+    'linkedin.type': 'Tipo',
+    'linkedin.profile': 'Perfil',
+    'linkedin.company': 'Empresa',
+    'linkedin.username': 'Usuario',
+    'linkedin.username_ph': 'ej. nombre-apellido-123',
+    'linkedin.company_ph': 'ej. mi-empresa',
+    'linkedin.hint': 'El QR enlaza al perfil o página de empresa.',
+
+    // Telegram
+    'telegram.username': 'Usuario de Telegram',
+    'telegram.username_ph': 'ej. usuario',
+    'telegram.hint': 'El QR abre el chat o canal en Telegram.',
+
     // Presets
     'preset.classic': 'Clásico',
     'preset.rounded': 'Redondeado',
@@ -186,6 +222,12 @@ export const translations = {
     'tab.instagram': 'Instagram',
     'tab.twitter': 'X/Twitter',
     'tab.youtube': 'YouTube',
+    'tab.event': 'Event',
+    'tab.tiktok': 'TikTok',
+    'tab.linkedin': 'LinkedIn',
+    'tab.telegram': 'Telegram',
+    'tabs.more': 'More',
+    'tabs.less': 'Less',
 
     // WiFi
     'wifi.ssid': 'WiFi Name (SSID)',
@@ -299,6 +341,36 @@ export const translations = {
     'youtube.video_id_ph': 'e.g. dQw4w9WgXcQ',
     'youtube.hint': 'The QR links to a specific YouTube channel or video.',
 
+    // Event
+    'event.title': 'Event title',
+    'event.title_ph': 'e.g. Ana\'s birthday',
+    'event.start': 'Starts',
+    'event.end': 'Ends',
+    'event.location': 'Location',
+    'event.location_ph': 'e.g. City hall',
+    'event.description': 'Description',
+    'event.description_ph': 'Event details...',
+    'event.hint': 'The QR adds the event to the scanner\'s calendar.',
+
+    // TikTok
+    'tiktok.username': 'TikTok username',
+    'tiktok.username_ph': 'e.g. username',
+    'tiktok.hint': 'The QR links to the public TikTok profile.',
+
+    // LinkedIn
+    'linkedin.type': 'Type',
+    'linkedin.profile': 'Profile',
+    'linkedin.company': 'Company',
+    'linkedin.username': 'Username',
+    'linkedin.username_ph': 'e.g. firstname-lastname-123',
+    'linkedin.company_ph': 'e.g. my-company',
+    'linkedin.hint': 'The QR links to the profile or company page.',
+
+    // Telegram
+    'telegram.username': 'Telegram username',
+    'telegram.username_ph': 'e.g. username',
+    'telegram.hint': 'The QR opens the chat or channel in Telegram.',
+
     // Presets
     'preset.classic': 'Classic',
     'preset.rounded': 'Rounded',
@@ -354,6 +426,12 @@ export const translations = {
     'tab.instagram': 'Instagram',
     'tab.twitter': 'X/Twitter',
     'tab.youtube': 'YouTube',
+    'tab.event': 'Evento',
+    'tab.tiktok': 'TikTok',
+    'tab.linkedin': 'LinkedIn',
+    'tab.telegram': 'Telegram',
+    'tabs.more': 'Mais',
+    'tabs.less': 'Menos',
 
     // WiFi
     'wifi.ssid': 'Nome WiFi (SSID)',
@@ -466,6 +544,36 @@ export const translations = {
     'youtube.video_id': 'ID do vídeo',
     'youtube.video_id_ph': 'ex. dQw4w9WgXcQ',
     'youtube.hint': 'O QR linka para um canal ou vídeo específico do YouTube.',
+
+    // Event
+    'event.title': 'Título do evento',
+    'event.title_ph': 'ex. Aniversário da Ana',
+    'event.start': 'Início',
+    'event.end': 'Fim',
+    'event.location': 'Local',
+    'event.location_ph': 'ex. Salão de festas',
+    'event.description': 'Descrição',
+    'event.description_ph': 'Detalhes do evento...',
+    'event.hint': 'O QR adiciona o evento ao calendário de quem o escaneia.',
+
+    // TikTok
+    'tiktok.username': 'Usuário do TikTok',
+    'tiktok.username_ph': 'ex. usuario',
+    'tiktok.hint': 'O QR linka para o perfil público do TikTok.',
+
+    // LinkedIn
+    'linkedin.type': 'Tipo',
+    'linkedin.profile': 'Perfil',
+    'linkedin.company': 'Empresa',
+    'linkedin.username': 'Usuário',
+    'linkedin.username_ph': 'ex. nome-sobrenome-123',
+    'linkedin.company_ph': 'ex. minha-empresa',
+    'linkedin.hint': 'O QR linka para o perfil ou página da empresa.',
+
+    // Telegram
+    'telegram.username': 'Usuário do Telegram',
+    'telegram.username_ph': 'ex. usuario',
+    'telegram.hint': 'O QR abre o chat ou canal no Telegram.',
 
     // Presets
     'preset.classic': 'Clássico',

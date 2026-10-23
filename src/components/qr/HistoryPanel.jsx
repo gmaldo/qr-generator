@@ -1,16 +1,5 @@
 import { useState } from 'react'
-
-const TAB_ICONS = {
-  wifi: '📶',
-  website: '🌐',
-  text: '📝',
-  whatsapp: '💬',
-  email: '📧',
-  phone: '📞',
-  sms: '✉️',
-  vcard: '👤',
-  location: '📍',
-}
+import TabIcon from '../TabIcon'
 
 function formatTime(isoString) {
   const date = new Date(isoString)
@@ -33,6 +22,13 @@ function getDataPreview(item) {
     case 'sms': return item.data.phone || 'SMS'
     case 'vcard': return item.data.name || 'Contacto'
     case 'location': return item.data.label || `${item.data.lat}, ${item.data.lng}`
+    case 'event': return item.data.title || 'Evento'
+    case 'instagram': return item.data.username || 'Instagram'
+    case 'twitter': return item.data.username || 'X'
+    case 'youtube': return item.data.handle || item.data.videoId || 'YouTube'
+    case 'tiktok': return item.data.username || 'TikTok'
+    case 'linkedin': return item.data.username || 'LinkedIn'
+    case 'telegram': return item.data.username || 'Telegram'
     default: return ''
   }
 }
@@ -63,9 +59,9 @@ export default function HistoryPanel({ history, onRestore, onRemove, onClear, t 
                   className="history-item-btn"
                   onClick={() => onRestore(item)}
                 >
-                  <span className="history-icon">{TAB_ICONS[item.tab] || '📱'}</span>
+                  <span className="history-icon"><TabIcon tabId={item.tab} /></span>
                   <div className="history-item-info">
-                    <span className="history-item-type">{item.tab}</span>
+                    <span className="history-item-type">{t(`tab.${item.tab}`)}</span>
                     <span className="history-item-data">{getDataPreview(item)}</span>
                   </div>
                   <span className="history-item-time">{formatTime(item.timestamp)}</span>
