@@ -18,6 +18,13 @@ import HistoryPanel from './components/qr/HistoryPanel'
 import Footer from './components/Footer'
 import './index.css'
 
+// vCard and iCalendar TEXT values escape \ ; , and newlines — without it a
+// comma splits the property and the scanner reads a broken card/event.
+const escText = v => v.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n')
+
+// WIFI: payloads (ZXing format) escape \ ; , : " the same way.
+const escWifi = v => v.replace(/([\\;,:"])/g, '\\$1')
+
 function App() {
   const [lang, setLang] = useState(detectLang)
   const t = useMemo(() => makeT(lang), [lang])
@@ -95,24 +102,20 @@ function App() {
     setActiveTab(tabId)
     setFormKey(k => k + 1)
 
-    if (tabId === 'location') {
-      setLocationData(prev => {
-        if (prev.lat || prev.lng) return prev
-        fetch('https://ipapi.co/json/')
-          .then(r => r.json())
-          .then(data => {
-            if (data.latitude && data.longitude) {
-              setLocationData(d => ({
-                ...d,
-                lat: String(data.latitude),
-                lng: String(data.longitude),
-                label: d.label || data.city || '',
-              }))
-            }
-          })
-          .catch(() => { })
-        return prev
-      })
+    if (tabId === 'location' && !locationData.lat && !locationData.lng) {
+      fetch('https://ipapi.co/json/')
+        .then(r => r.json())
+        .then(data => {
+          if (data.latitude && data.longitude) {
+            setLocationData(d => ({
+              ...d,
+              lat: String(data.latitude),
+              lng: String(data.longitude),
+              label: d.label || data.city || '',
+            }))
+          }
+        })
+        .catch(() => { })
     }
   }
 
@@ -120,7 +123,7 @@ function App() {
     switch (activeTab) {
       case 'wifi':
         if (!wifiData.ssid) return ''
-        return `WIFI:T:${wifiData.security};S:${wifiData.ssid};P:${wifiData.password};;`
+        return `WIFI:T:${wifiData.security};S:${escWifi(wifiData.ssid)};P:${escWifi(wifiData.password)};;`
 
       case 'website': {
         let url = websiteData.url.trim()
@@ -162,10 +165,10 @@ function App() {
 
       case 'vcard': {
         if (!vcardData.name) return ''
-        const lines = ['BEGIN:VCARD', 'VERSION:3.0', `FN:${vcardData.name}`]
+        const lines = ['BEGIN:VCARD', 'VERSION:3.0', `FN:${escText(vcardData.name)}`]
         if (vcardData.phone) lines.push(`TEL:${vcardData.phone}`)
         if (vcardData.email) lines.push(`EMAIL:${vcardData.email}`)
-        if (vcardData.org) lines.push(`ORG:${vcardData.org}`)
+        if (vcardData.org) lines.push(`ORG:${escText(vcardData.org)}`)
         if (vcardData.url) lines.push(`URL:${vcardData.url}`)
         lines.push('END:VCARD')
         return lines.join('\n')
@@ -181,10 +184,9 @@ function App() {
 
       case 'event': {
         if (!eventData.title || !eventData.start) return ''
-        // iCalendar text fields escape \ ; , and newlines, or a comma in the
-        // title splits the property and the scanner reads a broken event.
-        const esc = v => v.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n')
-        const toIcs = dt => dt ? dt.replace(/[-:]/g, '') + '00' : ''
+        // datetime-local may carry seconds; ICS wants HHMMSS, so truncate to
+        // minutes then re-append the seconds field as "00".
+        const toIcs = dt => dt ? dt.slice(0, 16).replace(/[-:]/g, '') + '00' : ''
         const lines = [
           'BEGIN:VCALENDAR',
           'VERSION:2.0',
@@ -195,22 +197,22 @@ function App() {
           `DTSTART:${toIcs(eventData.start)}`,
         ]
         if (eventData.end) lines.push(`DTEND:${toIcs(eventData.end)}`)
-        lines.push(`SUMMARY:${esc(eventData.title)}`)
-        if (eventData.location) lines.push(`LOCATION:${esc(eventData.location)}`)
-        if (eventData.description) lines.push(`DESCRIPTION:${esc(eventData.description)}`)
+        lines.push(`SUMMARY:${escText(eventData.title)}`)
+        if (eventData.location) lines.push(`LOCATION:${escText(eventData.location)}`)
+        if (eventData.description) lines.push(`DESCRIPTION:${escText(eventData.description)}`)
         lines.push('END:VEVENT', 'END:VCALENDAR')
         return lines.join('\n')
       }
 
       case 'instagram': {
         if (!instagramData.username) return ''
-        const igUser = instagramData.username.replace('@', '').trim()
+        const igUser = instagramData.username.replace(/^@+/, '').trim()
         return `https://instagram.com/${igUser}`
       }
 
       case 'twitter': {
         if (!twitterData.username) return ''
-        const twUser = twitterData.username.replace('@', '').trim()
+        const twUser = twitterData.username.replace(/^@+/, '').trim()
         return `https://x.com/${twUser}`
       }
 
@@ -220,13 +222,13 @@ function App() {
           return `https://youtu.be/${youtubeData.videoId.trim()}`
         }
         if (!youtubeData.handle) return ''
-        const ytHandle = youtubeData.handle.replace('@', '').trim()
+        const ytHandle = youtubeData.handle.replace(/^@+/, '').trim()
         return `https://youtube.com/@${ytHandle}`
       }
 
       case 'tiktok': {
         if (!tiktokData.username) return ''
-        const ttUser = tiktokData.username.replace('@', '').trim()
+        const ttUser = tiktokData.username.replace(/^@+/, '').trim()
         return `https://www.tiktok.com/@${ttUser}`
       }
 

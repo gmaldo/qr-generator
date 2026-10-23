@@ -3,6 +3,7 @@ import { useState, useRef, useCallback } from 'react'
 export default function useLocationSearch(setLocationData) {
   const [locationSearch, setLocationSearch] = useState({ query: '', results: [] })
   const searchTimeoutRef = useRef(null)
+  const requestIdRef = useRef(0)
 
   const handleLocationSearch = useCallback((query) => {
     setLocationSearch(s => ({ ...s, query }))
@@ -12,14 +13,18 @@ export default function useLocationSearch(setLocationData) {
       return
     }
     searchTimeoutRef.current = setTimeout(async () => {
+      // Stale responses must not overwrite newer results
+      const reqId = ++requestIdRef.current
       try {
         const res = await fetch(
           `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`,
-          { headers: { 'Accept-Language': 'es' } }
+          { headers: { 'Accept-Language': navigator.language || 'es' } }
         )
         const data = await res.json()
+        if (reqId !== requestIdRef.current) return
         setLocationSearch(s => ({ ...s, results: data }))
       } catch {
+        if (reqId !== requestIdRef.current) return
         setLocationSearch(s => ({ ...s, results: [] }))
       }
     }, 400)

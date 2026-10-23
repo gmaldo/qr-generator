@@ -1,7 +1,6 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 
 export default function LogoUploader({ logo, setLogo, t }) {
-  const [preview, setPreview] = useState(null)
   const fileInputRef = useRef(null)
 
   const handleFileChange = (e) => {
@@ -10,16 +9,13 @@ export default function LogoUploader({ logo, setLogo, t }) {
 
     const reader = new FileReader()
     reader.onload = (event) => {
-      const dataUrl = event.target.result
-      setPreview(dataUrl)
-      setLogo({ image: dataUrl })
+      setLogo(l => ({ ...l, image: event.target.result }))
     }
     reader.readAsDataURL(file)
   }
 
   const removeLogo = () => {
-    setPreview(null)
-    setLogo({ image: null })
+    setLogo(l => ({ ...l, image: null }))
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -28,9 +24,9 @@ export default function LogoUploader({ logo, setLogo, t }) {
       <span className="logo-label">{t('qr.logo')}</span>
 
       <div className="logo-upload-area">
-        {preview ? (
+        {logo.image ? (
           <div className="logo-preview-wrap">
-            <img src={preview} alt="Logo" className="logo-preview" />
+            <img src={logo.image} alt="Logo" className="logo-preview" />
             <button className="logo-remove-btn" onClick={removeLogo} title={t('qr.logo_remove')}>
               ✕
             </button>
@@ -54,7 +50,7 @@ export default function LogoUploader({ logo, setLogo, t }) {
         />
       </div>
 
-      {preview && (
+      {logo.image && (
         <div className="logo-options">
           <label className="logo-option-label">
             <input

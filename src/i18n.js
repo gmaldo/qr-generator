@@ -5,6 +5,12 @@ export const translations = {
     'header.title': 'Generador de QR',
     'header.subtitle': 'Creá códigos QR en segundos, sin límites',
 
+    // Theme
+    'theme.to_light': 'Cambiar a modo claro',
+    'theme.to_dark': 'Cambiar a modo oscuro',
+    'theme.light': 'Modo claro',
+    'theme.dark': 'Modo oscuro',
+
     // Tabs
     'tab.wifi': 'WiFi',
     'tab.website': 'Web',
@@ -88,6 +94,8 @@ export const translations = {
     'location.place': 'Nombre del lugar (opcional)',
     'location.place_ph': 'Obelisco, Buenos Aires',
     'location.hint': 'Al escanear abrirá Google Maps con la ubicación.',
+    'location.map_aria': 'Seleccioná una ubicación en el mapa',
+    'location.pin_selected': 'Pin seleccionado',
 
     // QR section
     'qr.preview': 'Vista previa',
@@ -100,6 +108,7 @@ export const translations = {
     'qr.share': 'Compartir',
     'qr.sharePng': 'Compartir PNG',
     'qr.shareSvg': 'Compartir SVG',
+    'qr.share_title': 'Código QR',
     'qr.logo': 'Logo central',
     'qr.logo_upload': 'Subir imagen',
     'qr.logo_size': 'Tamaño',
@@ -116,6 +125,7 @@ export const translations = {
     'history.title': 'Historial',
     'history.remove': 'Eliminar',
     'history.clear': 'Limpiar historial',
+    'history.now': 'Ahora',
 
     // Instagram
     'instagram.username': 'Usuario de Instagram',
@@ -209,6 +219,12 @@ export const translations = {
     'header.title': 'QR Generator',
     'header.subtitle': 'Create QR codes in seconds, no limits',
 
+    // Theme
+    'theme.to_light': 'Switch to light mode',
+    'theme.to_dark': 'Switch to dark mode',
+    'theme.light': 'Light mode',
+    'theme.dark': 'Dark mode',
+
     // Tabs
     'tab.wifi': 'WiFi',
     'tab.website': 'Web',
@@ -292,6 +308,8 @@ export const translations = {
     'location.place': 'Place name (optional)',
     'location.place_ph': 'Times Square, New York',
     'location.hint': 'Scanning will open Google Maps with the location.',
+    'location.map_aria': 'Pick a location on the map',
+    'location.pin_selected': 'Selected pin',
 
     // QR section
     'qr.preview': 'Preview',
@@ -304,6 +322,7 @@ export const translations = {
     'qr.share': 'Share',
     'qr.sharePng': 'Share PNG',
     'qr.shareSvg': 'Share SVG',
+    'qr.share_title': 'QR Code',
     'qr.logo': 'Center logo',
     'qr.logo_upload': 'Upload image',
     'qr.logo_size': 'Size',
@@ -320,6 +339,7 @@ export const translations = {
     'history.title': 'History',
     'history.remove': 'Remove',
     'history.clear': 'Clear history',
+    'history.now': 'Now',
 
     // Instagram
     'instagram.username': 'Instagram username',
@@ -413,6 +433,12 @@ export const translations = {
     'header.title': 'Gerador de QR',
     'header.subtitle': 'Crie códigos QR em segundos, sem limites',
 
+    // Theme
+    'theme.to_light': 'Mudar para modo claro',
+    'theme.to_dark': 'Mudar para modo escuro',
+    'theme.light': 'Modo claro',
+    'theme.dark': 'Modo escuro',
+
     // Tabs
     'tab.wifi': 'WiFi',
     'tab.website': 'Web',
@@ -496,6 +522,8 @@ export const translations = {
     'location.place': 'Nome do lugar (opcional)',
     'location.place_ph': 'Avenida Paulista, São Paulo',
     'location.hint': 'Ao escanear, abrirá o Google Maps com a localização.',
+    'location.map_aria': 'Selecione um local no mapa',
+    'location.pin_selected': 'Pin selecionado',
 
     // QR section
     'qr.preview': 'Pré-visualização',
@@ -508,6 +536,7 @@ export const translations = {
     'qr.share': 'Compartilhar',
     'qr.sharePng': 'Compartilhar PNG',
     'qr.shareSvg': 'Compartilhar SVG',
+    'qr.share_title': 'Código QR',
     'qr.logo': 'Logo central',
     'qr.logo_upload': 'Enviar imagem',
     'qr.logo_size': 'Tamanho',
@@ -524,6 +553,7 @@ export const translations = {
     'history.title': 'Histórico',
     'history.remove': 'Remover',
     'history.clear': 'Limpar histórico',
+    'history.now': 'Agora',
 
     // Instagram
     'instagram.username': 'Nome de usuário do Instagram',

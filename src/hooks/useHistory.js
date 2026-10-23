@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 const STORAGE_KEY = 'qr-history'
 const MAX_ITEMS = 10
@@ -13,11 +13,20 @@ function loadHistory() {
 }
 
 function saveHistory(items) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+  } catch {
+    // storage full or unavailable — history just won't persist
+  }
 }
 
 export default function useHistory() {
   const [history, setHistory] = useState(loadHistory)
+
+  // Persist as an effect so state updaters stay pure (StrictMode double-invokes them)
+  useEffect(() => {
+    saveHistory(history)
+  }, [history])
 
   const addItem = useCallback((item) => {
     const entry = {
@@ -25,25 +34,14 @@ export default function useHistory() {
       timestamp: new Date().toISOString(),
       ...item,
     }
-    setHistory(prev => {
-      const next = [entry, ...prev].slice(0, MAX_ITEMS)
-      saveHistory(next)
-      return next
-    })
+    setHistory(prev => [entry, ...prev].slice(0, MAX_ITEMS))
   }, [])
 
   const removeItem = useCallback((id) => {
-    setHistory(prev => {
-      const next = prev.filter(item => item.id !== id)
-      saveHistory(next)
-      return next
-    })
+    setHistory(prev => prev.filter(item => item.id !== id))
   }, [])
 
-  const clearAll = useCallback(() => {
-    setHistory([])
-    saveHistory([])
-  }, [])
+  const clearAll = useCallback(() => setHistory([]), [])
 
   return { history, addItem, removeItem, clearAll }
 }

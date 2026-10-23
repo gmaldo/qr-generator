@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import TabIcon from '../TabIcon'
 
-function formatTime(isoString) {
+function formatTime(isoString, t) {
   const date = new Date(isoString)
   const now = new Date()
   const diff = now - date
-  if (diff < 60000) return 'Ahora'
+  if (diff < 60000) return t('history.now')
   if (diff < 3600000) return `${Math.floor(diff / 60000)}m`
   if (diff < 86400000) return `${Math.floor(diff / 3600000)}h`
   return date.toLocaleDateString()
@@ -64,7 +64,7 @@ export default function HistoryPanel({ history, onRestore, onRemove, onClear, t 
                     <span className="history-item-type">{t(`tab.${item.tab}`)}</span>
                     <span className="history-item-data">{getDataPreview(item)}</span>
                   </div>
-                  <span className="history-item-time">{formatTime(item.timestamp)}</span>
+                  <span className="history-item-time">{formatTime(item.timestamp, t)}</span>
                 </button>
                 <button
                   className="history-remove-btn"

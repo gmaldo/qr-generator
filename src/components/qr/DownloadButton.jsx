@@ -14,7 +14,7 @@ export default function DownloadActions({ qrInstanceRef, activeTab, qrValue, t, 
     const file = new File([blob], `qr-${activeTab}-${Date.now()}.${extension}`, { type: mime })
 
     if (isStandalone() && navigator.canShare?.({ files: [file] })) {
-      await navigator.share({ files: [file], title: 'Código QR' })
+      await navigator.share({ files: [file], title: t('qr.share_title') })
     } else {
       qrInstanceRef.current.download({ name: `qr-${activeTab}-${Date.now()}`, extension })
     }
@@ -43,7 +43,7 @@ export default function DownloadActions({ qrInstanceRef, activeTab, qrValue, t, 
       const mime = extension === 'png' ? 'image/png' : 'image/svg+xml'
       const file = new File([blob], `qr-${activeTab}.${extension}`, { type: mime })
       if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: 'Código QR' })
+        await navigator.share({ files: [file], title: t('qr.share_title') })
         onSave?.()
       }
     } catch {

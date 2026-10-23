@@ -28,8 +28,8 @@ export default function Header({ t, lang, setLang, theme, onToggleTheme }) {
         <button
           className="theme-toggle"
           onClick={onToggleTheme}
-          aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-          title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+          aria-label={theme === 'dark' ? t('theme.to_light') : t('theme.to_dark')}
+          title={theme === 'dark' ? t('theme.light') : t('theme.dark')}
         >
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>

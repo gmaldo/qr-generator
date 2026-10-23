@@ -80,6 +80,7 @@ export default function LocationForm({ data, setData, t, ic }) {
             onSelect={({ lat, lng }) =>
               setData(d => ({ ...d, lat, lng }))
             }
+            t={t}
           />
           {data.lat && data.lng && (
             <p className="coords-display">

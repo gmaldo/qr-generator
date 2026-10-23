@@ -1,23 +1,31 @@
 import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
+import iconUrl from 'leaflet/dist/images/marker-icon.png'
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
 
-// Fix default marker icons (webpack/vite asset issue)
+// Fix default marker icons: Leaflet computes URLs that bundlers can't resolve,
+// so point it at the bundled assets instead of its broken defaults.
 delete L.Icon.Default.prototype._getIconUrl
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-})
+L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl })
 
 /**
  * MapPicker — click anywhere on the OpenStreetMap to place/move a pin.
  * Calls onSelect({ lat, lng, label }) when pin is placed.
  */
-export default function MapPicker({ lat, lng, onSelect }) {
+export default function MapPicker({ lat, lng, onSelect, t }) {
     const containerRef = useRef(null)
     const mapRef = useRef(null)
     const markerRef = useRef(null)
+    // Leaflet handlers are bound once at init; refs keep them from capturing
+    // a stale onSelect/t closure.
+    const onSelectRef = useRef(onSelect)
+    const tRef = useRef(t)
+    useEffect(() => {
+        onSelectRef.current = onSelect
+        tRef.current = t
+    })
 
     // Initialize map once
     useEffect(() => {
@@ -38,13 +46,13 @@ export default function MapPicker({ lat, lng, onSelect }) {
             // If we already have valid coords, place a marker
             if (lat && lng) {
                 markerRef.current = L.marker([parseFloat(lat), parseFloat(lng)], { draggable: true }).addTo(map)
-                bindMarkerEvents(markerRef.current, onSelect)
+                bindMarkerEvents(markerRef.current, onSelectRef, tRef)
             }
 
             // Click to place/move pin
             map.on('click', (e) => {
                 const { lat, lng } = e.latlng
-                markerRef.current = placeMarker(map, lat, lng, onSelect)
+                markerRef.current = placeMarker(map, lat, lng, onSelectRef, tRef)
             })
 
             mapRef.current = map
@@ -79,40 +87,40 @@ export default function MapPicker({ lat, lng, onSelect }) {
             markerRef.current.setLatLng([parsedLat, parsedLng])
         } else {
             markerRef.current = L.marker([parsedLat, parsedLng], { draggable: true }).addTo(mapRef.current)
-            bindMarkerEvents(markerRef.current, onSelect)
+            bindMarkerEvents(markerRef.current, onSelectRef, tRef)
         }
         mapRef.current.setView([parsedLat, parsedLng], mapRef.current.getZoom())
-    }, [lat, lng]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [lat, lng])
 
     return (
         <div
             ref={containerRef}
             className="map-picker-container"
-            aria-label="Seleccioná una ubicación en el mapa"
+            aria-label={t('location.map_aria')}
         />
     )
 }
 
-function placeMarker(map, lat, lng, onSelect) {
+function placeMarker(map, lat, lng, onSelectRef, tRef) {
     // Remove old marker if exists (handled via ref in component)
     map.eachLayer((layer) => {
         if (layer instanceof L.Marker) layer.remove()
     })
 
     const marker = L.marker([lat, lng], { draggable: true }).addTo(map)
-        .bindPopup(`<b>Pin seleccionado</b><br>${lat.toFixed(5)}, ${lng.toFixed(5)}`)
+        .bindPopup(`<b>${tRef.current('location.pin_selected')}</b><br>${lat.toFixed(5)}, ${lng.toFixed(5)}`)
         .openPopup()
 
-    bindMarkerEvents(marker, onSelect)
-    onSelect({ lat: lat.toFixed(6), lng: lng.toFixed(6), label: '' })
+    bindMarkerEvents(marker, onSelectRef, tRef)
+    onSelectRef.current({ lat: lat.toFixed(6), lng: lng.toFixed(6), label: '' })
 
     return marker
 }
 
-function bindMarkerEvents(marker, onSelect) {
+function bindMarkerEvents(marker, onSelectRef, tRef) {
     marker.on('dragend', (e) => {
         const { lat, lng } = e.target.getLatLng()
-        marker.setPopupContent(`<b>Pin seleccionado</b><br>${lat.toFixed(5)}, ${lng.toFixed(5)}`)
-        onSelect({ lat: lat.toFixed(6), lng: lng.toFixed(6), label: '' })
+        marker.setPopupContent(`<b>${tRef.current('location.pin_selected')}</b><br>${lat.toFixed(5)}, ${lng.toFixed(5)}`)
+        onSelectRef.current({ lat: lat.toFixed(6), lng: lng.toFixed(6), label: '' })
     })
 }
